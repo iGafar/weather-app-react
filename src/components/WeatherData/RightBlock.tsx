@@ -1,39 +1,51 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../../store/store";
 
 const RightBlock: FC = () => {
   const weather = useSelector((state: RootState) => state.weather.days[0]);
+  const mode = useSelector((state: RootState) => state.mode.mode);
 
-  const data = [
-    {
-      img: "./icons/humidity-dark.png",
-      value: `${Math.floor(weather?.humidity) || "0"}%`,
-      name: "Humidity",
-    },
-    {
-      img: "./icons/wind-dark.png",
-      value: `${Math.floor(weather?.windspeed) || "0"}km/h`,
-      name: "Wind Speed",
-    },
-    {
-      img: "./icons/pressure-dark.png",
-      value: `${Math.floor(weather?.pressure) || "0"}hPa`,
-      name: "Pressure",
-    },
-    {
-      img: "./icons/uv-dark.png",
-      value: `${Math.floor(weather?.uvindex) || "0"}`,
-      name: "UV",
-    },
-  ];
+  const data = useMemo(
+    () => [
+      {
+        img: `./icons/humidity${mode ? "-dark" : ""}.png`,
+        value: `${Math.round(weather?.humidity) || "0"}%`,
+        name: "Humidity",
+      },
+      {
+        img: `./icons/wind${mode ? "-dark" : ""}.png`,
+        value: `${Math.round(weather?.windspeed) || "0"}km/h`,
+        name: "Wind Speed",
+      },
+      {
+        img: `./icons/pressure${mode ? "-dark" : ""}.png`,
+        value: `${Math.round(weather?.pressure) || "0"}hPa`,
+        name: "Pressure",
+      },
+      {
+        img: `./icons/uv${mode ? "-dark" : ""}.png`,
+        value: `${Math.round(weather?.uvindex) || "0"}`,
+        name: "UV",
+      },
+    ],
+    [
+      mode,
+      weather?.humidity,
+      weather?.pressure,
+      weather?.uvindex,
+      weather?.windspeed,
+    ]
+  );
 
   return (
     <RightBlockStyle>
       {data.map((item) => (
         <li key={item.name}>
-          <img src={item.img} alt={item.name} />
+          <picture>
+            <img src={item.img} alt={item.name} />
+          </picture>
           <p>{item.value}</p>
           <h4>{item.name}</h4>
         </li>
@@ -52,13 +64,21 @@ const RightBlockStyle = styled.ul`
     width: 50%;
     height: 50%;
     text-align: center;
+  }
+
+  picture {
+    height: 60px;
+    display: inline-block;
+
     img {
       max-width: 60px;
+      width: 100%;
     }
   }
 
   p {
-    color: rgb(255, 255, 255);
+    white-space: nowrap;
+    color: var(--main-color);
     font-size: 20px;
     font-weight: 600;
     line-height: 30px;
@@ -66,7 +86,8 @@ const RightBlockStyle = styled.ul`
   }
 
   h4 {
-    color: rgb(255, 255, 255);
+		white-space: nowrap;
+    color: var(--main-color);
     font-size: 16px;
     font-weight: 500;
     line-height: 24px;

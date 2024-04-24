@@ -10,9 +10,9 @@ const CenterBlock: FC = () => {
     <CenterBlockStyle>
       <img
         src={`./weather/${weather?.icon}.svg`}
-        alt={weather?.icon || "weather"}
+        alt={weather?.conditions || "weather"}
       />
-      <h2>{weather?.icon}</h2>
+      <h2>{weather?.conditions}</h2>
     </CenterBlockStyle>
   );
 };
@@ -30,11 +30,12 @@ const CenterBlockStyle = styled.div`
   }
 
   h2 {
-    color: rgb(255, 255, 255);
+    color: var(--main-color);
     font-size: 32px;
     font-weight: 600;
     line-height: 48px;
     text-transform: capitalize;
+    text-align: center;
   }
 `;
 

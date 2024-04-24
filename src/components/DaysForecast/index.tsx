@@ -9,6 +9,7 @@ const DaysForecast: FC = () => {
   useEffect(() => {
     console.log("days", days);
   }, [days]);
+
   return (
     <DaysForecastStyle>
       <h2>5 Days Forecast:</h2>
@@ -23,18 +24,19 @@ const DaysForecast: FC = () => {
 
 const DaysForecastStyle = styled.div`
   border-radius: 30px;
-  background: rgb(68, 68, 68);
+  background: var(--primary-color);
   box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.5);
   padding: 15px 30px;
   max-width: 415px;
 
   h2 {
-    color: rgb(255, 255, 255);
+    color: var(--main-color);
     font-size: 32px;
     font-weight: 700;
     line-height: 48px;
     letter-spacing: 0%;
     text-align: center;
+    margin-bottom: 20px;
   }
 
   ul {

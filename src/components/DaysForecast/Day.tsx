@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { getCelsiusTemp } from "../../functions";
 
 interface IProps {
   icon: string;
@@ -11,7 +12,7 @@ const Day: FC<IProps> = ({ icon, temp, day }) => {
   return (
     <DayStyle>
       <img src={`./weather/${icon}.svg`} alt={icon} />
-      <p>{Math.floor(temp)}°C</p>
+      <p>{getCelsiusTemp(Math.round(temp))}°C</p>
       <h4>{day}</h4>
     </DayStyle>
   );
@@ -30,14 +31,14 @@ const DayStyle = styled.li`
   }
 
   p {
-    color: rgb(255, 255, 255);
+    color: var(--main-color);
     font-size: 24px;
     font-weight: 600;
     line-height: 36px;
   }
 
   h4 {
-    color: rgb(255, 255, 255);
+    color: var(--main-color);
     font-size: 20px;
     font-weight: 600;
     line-height: 30px;
