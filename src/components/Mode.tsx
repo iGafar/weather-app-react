@@ -1,13 +1,17 @@
-import { FC, useState } from "react";
+import { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { RootState } from "../store/store";
+import { changeMode } from "../store/slices/modeSlice";
 
 const Mode: FC = () => {
-  const [isDark, setIsDark] = useState<boolean>(false);
+  const mode = useSelector((state: RootState) => state.mode.mode);
+  const dispatch = useDispatch();
 
   return (
-    <ModeStyle $isDark={isDark}>
-      <button onClick={() => setIsDark((prev) => !prev)}></button>
-      <p>{isDark ? "Dark Mode" : "Light Mode"}</p>
+    <ModeStyle $isDark={mode}>
+      <button onClick={() => dispatch(changeMode())}></button>
+      <p>{mode ? "Dark Mode" : "Light Mode"}</p>
     </ModeStyle>
   );
 };
@@ -36,7 +40,7 @@ const ModeStyle = styled.div<{ $isDark: boolean }>`
   }
 
   p {
-    color: rgb(255, 255, 255);
+    color: var(--main-color);
     font-size: 18px;
     font-weight: 800;
     line-height: 27px;

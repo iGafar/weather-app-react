@@ -1,32 +1,52 @@
-import { FC } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IHourlyWeatherData } from "../../types";
-import { getHour } from "../../functions";
+import { getCelsiusTemp, getHour } from "../../functions";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 interface IProps {
   data: IHourlyWeatherData;
 }
 
 const Hour: FC<IProps> = ({ data }) => {
+  const mode = useSelector((state: RootState) => state.mode.mode);
+  const hourRef = useRef<HTMLHeadingElement>(null);
+  const [isEvening, setIsEvening] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (hourRef.current) {
+      setIsEvening(
+        +hourRef.current.innerText.slice(0, 2) > 18 ||
+          +hourRef.current.innerText.slice(0, 2) < 6
+      );
+    }
+    console.log(isEvening);
+  }, [isEvening]);
+
   return (
-    <HourStyle>
-      <h3>{getHour(data.datetime || "00:00")}</h3>
+    <HourStyle $mode={mode} $isEvening={isEvening}>
+      <h3 ref={hourRef}>{getHour(data.datetime || "00:00")}</h3>
       <img
         className="weather"
         src={`./weather/${data.icon}.svg`}
         alt={data.icon}
       />
-      <p className="temperature">26°C</p>
+      <p className="temperature">{getCelsiusTemp(data.temp)}°C</p>
       <img className="arrow" src="./icons/arrow.png" alt="arrow" />
-      <p className="speed">3km/h</p>
+      <p className="speed">{Math.round(data.windspeed)}km/h</p>
     </HourStyle>
   );
 };
 
-const HourStyle = styled.li`
+const HourStyle = styled.li<{ $mode: boolean; $isEvening: boolean }>`
   border-radius: 40px;
-  background: rgb(55, 54, 54);
-  width: 130px;
+  background: ${(props) =>
+    props.$mode
+      ? "rgb(55, 54, 54)"
+      : props.$isEvening
+      ? "linear-gradient(154.70deg, rgb(68, 61, 100) -15.918%,rgba(101, 130, 198, 0) 192.45%)"
+      : "linear-gradient(140.10deg, rgb(248, 133, 8) -15.977%,rgba(246, 250, 217, 0) 150.582%)"};
   padding: 15px 25px;
   display: flex;
   flex-direction: column;
@@ -34,7 +54,7 @@ const HourStyle = styled.li`
   gap: 20px;
 
   h3 {
-    color: rgb(255, 255, 255);
+    color: var(--main-color);
     font-size: 24px;
     font-weight: 700;
     line-height: 36px;
@@ -45,7 +65,7 @@ const HourStyle = styled.li`
   }
 
   .temperature {
-    color: rgb(255, 255, 255);
+    color: var(--main-color);
     font-size: 20px;
     font-weight: 700;
     line-height: 30px;
@@ -56,10 +76,11 @@ const HourStyle = styled.li`
   }
 
   .speed {
-    color: rgb(255, 255, 255);
+    color: var(--main-color);
     font-size: 20px;
     font-weight: 700;
     line-height: 30px;
+    white-space: nowrap;
   }
 `;
 

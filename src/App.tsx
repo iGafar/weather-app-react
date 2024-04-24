@@ -5,11 +5,13 @@ import DaysForecast from "./components/DaysForecast";
 import HourlyForecast from "./components/HourlyForecast";
 import Header from "./components/Header";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchWeatherData } from "./store/slices/weatherSlice";
+import { RootState } from "./store/store";
 
 function App() {
   const dispatch = useDispatch();
+  const mode = useSelector((state: RootState) => state.mode.mode);
 
   useEffect(() => {
     // navigator.geolocation.getCurrentPosition(async (position) => {
@@ -23,7 +25,7 @@ function App() {
   }, [dispatch]);
   return (
     <>
-      <Global />
+      <Global $mode={mode} />
       <Header />
       <section>
         <div className="container">
@@ -41,14 +43,24 @@ function App() {
   );
 }
 
-const Global = createGlobalStyle`
+const Global = createGlobalStyle<{ $mode: boolean }>`
+	:root {
+		--main-color: ${(props) =>
+      props.$mode ? "rgb(255, 255, 255)" : "rgb(0, 0, 0)"};
+		--primary-color: ${(props) =>
+      props.$mode ? "rgb(68, 68, 68)" : "rgb(217, 217, 217)"}
+	}
+
 	html, body {
 		height: max-content;
 	}
 
 	body {
 		font-family: "Poppins", sans-serif;
-		background: linear-gradient(130.48deg, rgb(125, 125, 125) 0%,rgb(12, 12, 12) 71.819%) no-repeat;
+		background: ${(props) =>
+      props.$mode
+        ? "linear-gradient(130.48deg, rgb(125, 125, 125) 0%,rgb(12, 12, 12) 71.819%) no-repeat"
+        : "linear-gradient(134.68deg, rgb(255, 255, 255) 0.285%, rgba(70, 97, 115, 0.5) 178.646%) no-repeat"};
 		min-height: 100vh;
 		padding-top: 63px;
 	}
