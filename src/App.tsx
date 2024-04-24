@@ -12,15 +12,9 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // navigator.geolocation.getCurrentPosition(async (position) => {
-    //   const lat = position.coords.latitude;
-    //   const long = position.coords.longitude;
-    //   console.log("lat", lat);
-    //   dispatch(fetchWeatherData({ lat, long }));
-    // });
-
     dispatch(fetchWeatherData({ lat: 55, long: 37 }));
   }, [dispatch]);
+
   return (
     <>
       <Global />

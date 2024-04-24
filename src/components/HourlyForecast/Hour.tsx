@@ -8,8 +8,10 @@ interface IProps {
 }
 
 const Hour: FC<IProps> = ({ data }) => {
+  console.log("data", data);
+
   return (
-    <HourStyle>
+    <HourStyle $winddir={data.winddir}>
       <h3>{getHour(data.datetime || "00:00")}</h3>
       <img
         className="weather"
@@ -23,7 +25,7 @@ const Hour: FC<IProps> = ({ data }) => {
   );
 };
 
-const HourStyle = styled.li`
+const HourStyle = styled.li<{ $winddir: number }>`
   border-radius: 40px;
   background: rgb(55, 54, 54);
   width: 130px;
@@ -53,6 +55,7 @@ const HourStyle = styled.li`
 
   .arrow {
     max-width: 50px;
+    transform: ${(props) => `rotate(${props.$winddir}deg)`};
   }
 
   .speed {
