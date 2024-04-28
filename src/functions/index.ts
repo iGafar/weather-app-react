@@ -6,6 +6,13 @@ export const getHour = (hour: string) => {
   return hour.substring(0, 5);
 };
 
+export const getDay = (dateString: string): string => {
+	const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	const d = new Date(dateString);
+	return days[d.getDay()];
+}
+
+
 export const getDateStandart = (date: string) => {
   const months = {
     "01": "Jan",
@@ -22,6 +29,16 @@ export const getDateStandart = (date: string) => {
     "12": "Dec",
   };
 
-  const month = date.substring(5, 7);
-  return `${date.substring(9)} ${months}`;
+  const month: keyof typeof months = date.substring(
+    5,
+    7
+  ) as keyof typeof months;
+
+  const day = date.substring(8);
+
+  return `${day}, ${months[month]}`;
 };
+
+// export const getGeolocationForCity = (city: string) => {
+//   const location = geocoder.osm;
+// };

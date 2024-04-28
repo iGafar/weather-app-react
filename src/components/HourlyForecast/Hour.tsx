@@ -10,14 +10,8 @@ interface IProps {
 }
 
 const Hour: FC<IProps> = ({ data }) => {
-<<<<<<< HEAD
-  console.log("data", data);
-
-  return (
-    <HourStyle $winddir={data.winddir}>
-      <h3>{getHour(data.datetime || "00:00")}</h3>
-=======
-  const mode = useSelector((state: RootState) => state.mode.mode);
+  const winddir = data.winddir;
+  const mode = useSelector((state: RootState) => state.data.mode);
   const hourRef = useRef<HTMLHeadingElement>(null);
   const [isEvening, setIsEvening] = useState<boolean>(false);
 
@@ -32,9 +26,8 @@ const Hour: FC<IProps> = ({ data }) => {
   }, [isEvening]);
 
   return (
-    <HourStyle $mode={mode} $isEvening={isEvening}>
+    <HourStyle $mode={mode} $isEvening={isEvening} $winddir={winddir}>
       <h3 ref={hourRef}>{getHour(data.datetime || "00:00")}</h3>
->>>>>>> 6b5187b6551d3696e92a1c85d9055ad7bda67aac
       <img
         className="weather"
         src={`./weather/${data.icon}.svg`}
@@ -47,11 +40,11 @@ const Hour: FC<IProps> = ({ data }) => {
   );
 };
 
-<<<<<<< HEAD
-const HourStyle = styled.li<{ $winddir: number }>`
-=======
-const HourStyle = styled.li<{ $mode: boolean; $isEvening: boolean }>`
->>>>>>> 6b5187b6551d3696e92a1c85d9055ad7bda67aac
+const HourStyle = styled.li<{
+  $winddir: number;
+  $mode: boolean;
+  $isEvening: boolean;
+}>`
   border-radius: 40px;
   background: ${(props) =>
     props.$mode
@@ -66,7 +59,9 @@ const HourStyle = styled.li<{ $mode: boolean; $isEvening: boolean }>`
   gap: 20px;
 
   h3 {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 24px;
     font-weight: 700;
     line-height: 36px;
@@ -77,7 +72,9 @@ const HourStyle = styled.li<{ $mode: boolean; $isEvening: boolean }>`
   }
 
   .temperature {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 20px;
     font-weight: 700;
     line-height: 30px;
@@ -89,7 +86,9 @@ const HourStyle = styled.li<{ $mode: boolean; $isEvening: boolean }>`
   }
 
   .speed {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 20px;
     font-weight: 700;
     line-height: 30px;

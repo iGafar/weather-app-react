@@ -5,7 +5,7 @@ import { RootState } from "../../store/store";
 
 const RightBlock: FC = () => {
   const weather = useSelector((state: RootState) => state.weather.days[0]);
-  const mode = useSelector((state: RootState) => state.mode.mode);
+  const mode = useSelector((state: RootState) => state.data.mode);
 
   const data = useMemo(
     () => [
@@ -40,7 +40,7 @@ const RightBlock: FC = () => {
   );
 
   return (
-    <RightBlockStyle>
+    <RightBlockStyle $mode={mode}>
       {data.map((item) => (
         <li key={item.name}>
           <picture>
@@ -54,7 +54,7 @@ const RightBlock: FC = () => {
   );
 };
 
-const RightBlockStyle = styled.ul`
+const RightBlockStyle = styled.ul<{ $mode: boolean }>`
   display: flex;
   flex-wrap: wrap;
   width: 33%;
@@ -78,7 +78,9 @@ const RightBlockStyle = styled.ul`
 
   p {
     white-space: nowrap;
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 20px;
     font-weight: 600;
     line-height: 30px;
@@ -86,8 +88,10 @@ const RightBlockStyle = styled.ul`
   }
 
   h4 {
-		white-space: nowrap;
-    color: var(--main-color);
+    white-space: nowrap;
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 16px;
     font-weight: 500;
     line-height: 24px;

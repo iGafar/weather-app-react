@@ -6,7 +6,7 @@ import { getCelsiusTemp, getHour } from "../../functions";
 
 const LeftBlock: FC = () => {
   const weather = useSelector((state: RootState) => state.weather.days[0]);
-  const mode = useSelector((state: RootState) => state.mode.mode);
+  const mode = useSelector((state: RootState) => state.data.mode);
 
   return (
     <LeftBlockStyle $mode={mode}>
@@ -18,7 +18,7 @@ const LeftBlock: FC = () => {
         </span>
       </p>
 
-      <SunStyle>
+      <SunStyle $mode={mode}>
         <img src={`./icons/sunrise${mode ? "-dark" : ""}.png`} alt="sunrise" />
         <div>
           <h4>Sunrise</h4>
@@ -26,7 +26,7 @@ const LeftBlock: FC = () => {
         </div>
       </SunStyle>
 
-      <SunStyle>
+      <SunStyle $mode={mode}>
         <img src={`./icons/sunset${mode ? "-dark" : ""}.png`} alt="sunset" />
         <div>
           <h4>Sunset</h4>
@@ -49,7 +49,8 @@ const LeftBlockStyle = styled.div<{ $mode: boolean }>`
   .temperature {
     background: linear-gradient(
       67.78deg,
-      var(--main-color),
+      ${(props) =>
+        props.$mode ? "var(--main-color-mode)" : "var(--main-color)"},
       rgba(255, 255, 255, 0)
     );
     background-clip: text;
@@ -78,7 +79,7 @@ const LeftBlockStyle = styled.div<{ $mode: boolean }>`
   }
 `;
 
-const SunStyle = styled.div`
+const SunStyle = styled.div<{ $mode: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,14 +94,18 @@ const SunStyle = styled.div`
   }
 
   h4 {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 20px;
     font-weight: 600;
     line-height: 30px;
   }
 
   p {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;

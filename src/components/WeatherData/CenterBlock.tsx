@@ -4,10 +4,11 @@ import styled from "styled-components";
 import { RootState } from "../../store/store";
 
 const CenterBlock: FC = () => {
+  const mode = useSelector((state: RootState) => state.data.mode);
   const weather = useSelector((state: RootState) => state.weather.days[0]);
 
   return (
-    <CenterBlockStyle>
+    <CenterBlockStyle $mode={mode}>
       <img
         src={`./weather/${weather?.icon}.svg`}
         alt={weather?.conditions || "weather"}
@@ -17,7 +18,7 @@ const CenterBlock: FC = () => {
   );
 };
 
-const CenterBlockStyle = styled.div`
+const CenterBlockStyle = styled.div<{ $mode: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -30,7 +31,9 @@ const CenterBlockStyle = styled.div`
   }
 
   h2 {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 32px;
     font-weight: 600;
     line-height: 48px;

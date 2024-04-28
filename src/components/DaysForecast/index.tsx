@@ -5,13 +5,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 
 const DaysForecast: FC = () => {
+  const mode = useSelector((state: RootState) => state.data.mode);
   const days = useSelector((state: RootState) => state.weather.days);
   useEffect(() => {
     console.log("days", days);
   }, [days]);
 
   return (
-    <DaysForecastStyle>
+    <DaysForecastStyle $mode={mode}>
       <h2>5 Days Forecast:</h2>
       <ul>
         {days.slice(0, 5).map((day, index) => (
@@ -22,15 +23,19 @@ const DaysForecast: FC = () => {
   );
 };
 
-const DaysForecastStyle = styled.div`
+const DaysForecastStyle = styled.div<{ $mode: boolean }>`
   border-radius: 30px;
-  background: var(--primary-color);
+  background: ${(props) =>
+    props.$mode ? "var(--primary-color-mode)" : "var(--primary-color)"};
+  transition: all 300ms linear;
   box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.5);
   padding: 15px 30px;
   max-width: 415px;
 
   h2 {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 32px;
     font-weight: 700;
     line-height: 48px;

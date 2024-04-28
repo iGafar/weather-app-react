@@ -1,10 +1,14 @@
 export interface IParams {
-  lat: number;
-  long: number;
+  city: string;
 }
 
-export interface IData {
+export interface IDataDays {
   days: IWeatherData[];
+}
+
+export interface ICoordinates {
+  lat: number;
+  lng: number;
 }
 
 export interface IHourlyWeatherData {

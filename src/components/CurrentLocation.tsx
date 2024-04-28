@@ -2,20 +2,28 @@ import { FC } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { fetchWeatherData } from "../store/slices/weatherSlice";
+import { AppDispatch } from "../store/store";
+import { fetchGeoToCity } from "../store/slices/dataSlice";
 
 const CurrentLocation: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const getCurrentLocation = () => {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const lat = position.coords.latitude;
-      const long = position.coords.longitude;
+  const handleWeatherLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
 
-      dispatch(fetchWeatherData({ lat, long }));
-    });
+        dispatch(fetchGeoToCity({ lat: latitude, lng: longitude }));
+        dispatch(fetchWeatherData({ lat: latitude, lng: longitude }));
+      });
+    } else {
+      console.log("Could not determine your position.");
+    }
   };
+
   return (
-    <CurrentLocationStyle onClick={() => getCurrentLocation()}>
+    <CurrentLocationStyle onClick={() => handleWeatherLocation()}>
       <img src="./icons/current-location.png" alt="current location" />
       Current Location
     </CurrentLocationStyle>

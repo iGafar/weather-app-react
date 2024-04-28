@@ -1,6 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import styled from "styled-components";
-import { getCelsiusTemp } from "../../functions";
+import { getCelsiusTemp, getDateStandart } from "../../functions";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 interface IProps {
   icon: string;
@@ -9,36 +11,44 @@ interface IProps {
 }
 
 const Day: FC<IProps> = ({ icon, temp, day }) => {
+  const mode = useSelector((state: RootState) => state.data.mode);
+
+  useEffect(() => {
+    getDateStandart(day);
+  }, [day]);
   return (
-    <DayStyle>
+    <DayStyle $mode={mode}>
       <img src={`./weather/${icon}.svg`} alt={icon} />
       <p>{getCelsiusTemp(Math.round(temp))}°C</p>
-      <h4>{day}</h4>
+      <h4>{getDateStandart(day)}</h4>
     </DayStyle>
   );
 };
 
-const DayStyle = styled.li`
+const DayStyle = styled.li<{ $mode: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
   white-space: nowrap;
   gap: 40px;
-  padding: 10px 0;
 
   img {
     max-width: 40px;
   }
 
   p {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 24px;
     font-weight: 600;
     line-height: 36px;
   }
 
   h4 {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 20px;
     font-weight: 600;
     line-height: 30px;

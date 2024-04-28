@@ -1,25 +1,22 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../constants";
-import { IData, IParams, IWeatherData } from "../../types";
+import { ICoordinates, IDataDays, IWeatherData } from "../../types";
 
 export interface CounterState {
   days: IWeatherData[];
+  loading: "pending" | "fulfilled" | "rejected";
 }
 
-export const fetchWeatherData = createAsyncThunk<IWeatherData[], IParams>(
+export const fetchWeatherData = createAsyncThunk<IWeatherData[], ICoordinates>(
   "weatherData/fetchWeatherData",
-  async (params: IParams): Promise<IWeatherData[]> => {
+  async (params: ICoordinates): Promise<IWeatherData[]> => {
     try {
-      const res = await axios
-        .get<IData>(
-          `${BASE_URL}${params.lat},${params.long}?key=D52NUFUDL7963TWL6VX3X2BQJ`
-        )
-        .then((res) => res.data.days);
+      const { data } = await axios.get<IDataDays>(
+        `${BASE_URL}${params.lat},${params.lng}?key=D52NUFUDL7963TWL6VX3X2BQJ`
+      );
 
-      console.log("data", res);
-
-      return res;
+      return data.days;
     } catch (error) {
       console.log(`Failed to fetch: ${onmessage}`);
       return [];
@@ -29,6 +26,7 @@ export const fetchWeatherData = createAsyncThunk<IWeatherData[], IParams>(
 
 const initialState: CounterState = {
   days: [],
+  loading: "pending",
 };
 
 export const weatherSlice = createSlice({
@@ -36,8 +34,17 @@ export const weatherSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchWeatherData.fulfilled, (state, action) => {
-      state.days = action.payload;
+    builder.addCase(fetchWeatherData.pending, (state) => {
+      state.loading = "pending";
+    });
+    builder.addCase(
+      fetchWeatherData.fulfilled,
+      (state, action: PayloadAction<IWeatherData[]>) => {
+        state.days = action.payload;
+      }
+    );
+    builder.addCase(fetchWeatherData.rejected, (state) => {
+      state.loading = "rejected";
     });
   },
 });

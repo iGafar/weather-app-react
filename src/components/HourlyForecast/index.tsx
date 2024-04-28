@@ -6,10 +6,11 @@ import { RootState } from "../../store/store";
 import { IHourlyWeatherData } from "../../types";
 
 const HourlyForecast: FC = () => {
+  const mode = useSelector((state: RootState) => state.data.mode);
   const hours = useSelector((state: RootState) => state.weather.days[0]?.hours);
 
   return (
-    <HourlyForecastStyle>
+    <HourlyForecastStyle $mode={mode}>
       <h2>Hourly Forecast:</h2>
       <ul>
         {hours?.map((hour: IHourlyWeatherData) => (
@@ -20,16 +21,20 @@ const HourlyForecast: FC = () => {
   );
 };
 
-const HourlyForecastStyle = styled.div`
+const HourlyForecastStyle = styled.div<{ $mode: boolean }>`
   border-radius: 30px;
   box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.5);
-  background: var(--primary-color);
+  background: ${(props) =>
+    props.$mode ? "var(--primary-color-mode)" : "var(--primary-color)"};
+  transition: all 300ms linear;
   padding: 15px 30px;
   width: 100%;
   overflow: hidden;
 
   h2 {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 32px;
     font-weight: 700;
     line-height: 48px;

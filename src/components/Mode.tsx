@@ -1,22 +1,22 @@
 import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { RootState } from "../store/store";
-import { changeMode } from "../store/slices/modeSlice";
+import { AppDispatch, RootState } from "../store/store";
+import { changeMode } from "../store/slices/dataSlice";
 
 const Mode: FC = () => {
-  const mode = useSelector((state: RootState) => state.mode.mode);
-  const dispatch = useDispatch();
+  const mode = useSelector((state: RootState) => state.data.mode);
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
-    <ModeStyle $isDark={mode}>
+    <ModeStyle $mode={mode}>
       <button onClick={() => dispatch(changeMode())}></button>
       <p>{mode ? "Dark Mode" : "Light Mode"}</p>
     </ModeStyle>
   );
 };
 
-const ModeStyle = styled.div<{ $isDark: boolean }>`
+const ModeStyle = styled.div<{ $mode: boolean }>`
   button {
     width: 100px;
     height: 38px;
@@ -34,13 +34,15 @@ const ModeStyle = styled.div<{ $isDark: boolean }>`
       border-radius: 50%;
       position: absolute;
       top: 50%;
-      left: ${(props) => (props.$isDark ? "5px" : "65px")};
+      left: ${(props) => (props.$mode ? "5px" : "65px")};
       transform: translateY(-50%);
     }
   }
 
   p {
-    color: var(--main-color);
+    color: ${(props) =>
+      props.$mode ? "var(--main-color-mode)" : "var(--main-color)"};
+    transition: all 200ms linear;
     font-size: 18px;
     font-weight: 800;
     line-height: 27px;

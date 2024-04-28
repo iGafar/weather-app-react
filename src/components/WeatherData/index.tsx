@@ -3,10 +3,14 @@ import styled from "styled-components";
 import LeftBlock from "./LeftBlock";
 import CenterBlock from "./CenterBlock";
 import RightBlock from "./RightBlock";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const WeatherData: FC = () => {
+  const mode = useSelector((state: RootState) => state.data.mode);
+
   return (
-    <WeatherDataStyle>
+    <WeatherDataStyle $mode={mode}>
       <LeftBlock />
       <CenterBlock />
       <RightBlock />
@@ -14,9 +18,11 @@ const WeatherData: FC = () => {
   );
 };
 
-const WeatherDataStyle = styled.div`
+const WeatherDataStyle = styled.div<{ $mode: boolean }>`
   border-radius: 30px;
-  background: var(--primary-color);
+  background: ${(props) =>
+    props.$mode ? "var(--primary-color-mode)" : "var(--primary-color)"};
+  transition: all 300ms linear;
   box-shadow: 10px 10px 4px 0px rgba(0, 0, 0, 0.5);
   padding: 24px;
   width: 100%;
