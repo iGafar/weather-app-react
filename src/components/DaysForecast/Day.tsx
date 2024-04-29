@@ -1,6 +1,6 @@
 import { FC, useEffect } from "react";
 import styled from "styled-components";
-import { getCelsiusTemp, getDateStandart } from "../../functions";
+import { getCelsiusTemp, getDateStandart, getDay } from "../../functions";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 
@@ -20,7 +20,9 @@ const Day: FC<IProps> = ({ icon, temp, day }) => {
     <DayStyle $mode={mode}>
       <img src={`./weather/${icon}.svg`} alt={icon} />
       <p>{getCelsiusTemp(Math.round(temp))}°C</p>
-      <h4>{getDateStandart(day)}</h4>
+      <h4>
+        {getDay(day)}, {getDateStandart(day).split(",").join("")}
+      </h4>
     </DayStyle>
   );
 };
@@ -43,6 +45,7 @@ const DayStyle = styled.li<{ $mode: boolean }>`
     font-size: 24px;
     font-weight: 600;
     line-height: 36px;
+    flex: 1;
   }
 
   h4 {

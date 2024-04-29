@@ -8,14 +8,14 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWeatherData } from "./store/slices/weatherSlice";
 import { AppDispatch, RootState } from "./store/store";
-import { fetchCityToGeo } from "./store/slices/geoSlice";
+import { fetchTime } from "./store/slices/dataSlice";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const mode = useSelector((state: RootState) => state.data.mode);
 
   useEffect(() => {
-    dispatch(fetchCityToGeo({ city: "Goa" }));
+    dispatch(fetchTime({ lat: 55.755841, lng: 37.617286 }));
     dispatch(fetchWeatherData({ lat: 55.755841, lng: 37.617286 }));
   }, [dispatch]);
 

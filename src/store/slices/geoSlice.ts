@@ -1,30 +1,29 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ICoordinates, IParams } from "../../types";
+import { ICoordinates } from "../../types";
 
 export interface GeoState {
   geo: ICoordinates;
-  loading: "pending" | "fulfilled" | "rejected";
+  loading: "idle" | "pending" | "fulfilled" | "rejected";
 }
 
-export const fetchCityToGeo = createAsyncThunk<ICoordinates, IParams>(
+export const fetchCityToGeo = createAsyncThunk<ICoordinates, string>(
   "cityToGeo/fetchCityToGeo",
-  async (params) => {
+  async (city: string) => {
     const options = {
       headers: {
-        "X-RapidAPI-Key": "0b2b22c7e2mshbb1afb579501133p1bec3bjsn2f3a3192ef04",
+        "X-RapidAPI-Key": "5eab756ae1msh44181e14f4c8381p17da48jsnc1784cf948d2",
         "X-RapidAPI-Host": "trueway-geocoding.p.rapidapi.com",
       },
     };
 
     try {
-      const response = await axios.get(
-        `https://trueway-geocoding.p.rapidapi.com/Geocode?language=en&address=${params.city}`,
+      const { data } = await axios.get(
+        `https://trueway-geocoding.p.rapidapi.com/Geocode?language=en&address=${city}`,
         options
       );
-      console.log(response.data.results[0].location);
 
-      return response.data.results[0].location;
+      return data?.results[0]?.location;
     } catch (error) {
       console.error(error);
     }
@@ -40,7 +39,7 @@ const initialState: GeoState = {
     lat: 55.755841,
     lng: 37.617286,
   },
-  loading: "pending",
+  loading: "idle",
 };
 
 export const geoSlice = createSlice({
@@ -54,7 +53,11 @@ export const geoSlice = createSlice({
     builder.addCase(
       fetchCityToGeo.fulfilled,
       (state, action: PayloadAction<ICoordinates>) => {
-        state.geo = action.payload;
+        if (action.payload) {
+          state.geo = action.payload;
+        } else {
+          alert("Incorrect city name.");
+        }
       }
     );
     builder.addCase(fetchCityToGeo.rejected, (state) => {

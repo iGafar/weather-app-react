@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { fetchWeatherData } from "../store/slices/weatherSlice";
 import { AppDispatch } from "../store/store";
-import { fetchGeoToCity } from "../store/slices/dataSlice";
+import { fetchGeoToCity, fetchTime } from "../store/slices/dataSlice";
 
 const CurrentLocation: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,9 +16,10 @@ const CurrentLocation: FC = () => {
 
         dispatch(fetchGeoToCity({ lat: latitude, lng: longitude }));
         dispatch(fetchWeatherData({ lat: latitude, lng: longitude }));
+        dispatch(fetchTime({ lat: latitude, lng: longitude }));
       });
     } else {
-      console.log("Could not determine your position.");
+      alert("Could not determine your position.");
     }
   };
 

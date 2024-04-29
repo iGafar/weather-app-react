@@ -7,11 +7,18 @@ export const getHour = (hour: string) => {
 };
 
 export const getDay = (dateString: string): string => {
-	const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-	const d = new Date(dateString);
-	return days[d.getDay()];
-}
-
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const d = new Date(dateString);
+  return days[d.getDay()];
+};
 
 export const getDateStandart = (date: string) => {
   const months = {
@@ -38,7 +45,3 @@ export const getDateStandart = (date: string) => {
 
   return `${day}, ${months[month]}`;
 };
-
-// export const getGeolocationForCity = (city: string) => {
-//   const location = geocoder.osm;
-// };

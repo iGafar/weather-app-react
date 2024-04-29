@@ -1,8 +1,8 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { AppDispatch, RootState } from "../store/store";
-import { changeCity } from "../store/slices/dataSlice";
+import { fetchGeoToCity, fetchTime } from "../store/slices/dataSlice";
 import { fetchWeatherData } from "../store/slices/weatherSlice";
 import { fetchCityToGeo } from "../store/slices/geoSlice";
 
@@ -14,11 +14,15 @@ const Search: FC = () => {
 
   const getNewWeatherData = (key: string) => {
     if (key === "Enter") {
-      dispatch(changeCity(city));
-      dispatch(fetchCityToGeo({ city: city }));
-      dispatch(fetchWeatherData({ lat: geo.lat, lng: geo.lng }));
+      dispatch(fetchCityToGeo(city));
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchWeatherData({ ...geo }));
+    dispatch(fetchTime({ ...geo }));
+    dispatch(fetchGeoToCity({ ...geo }));
+  }, [dispatch, geo]);
 
   return (
     <SearchStyle $mode={mode}>

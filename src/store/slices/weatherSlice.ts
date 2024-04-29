@@ -1,11 +1,10 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "../../constants";
 import { ICoordinates, IDataDays, IWeatherData } from "../../types";
 
 export interface CounterState {
   days: IWeatherData[];
-  loading: "pending" | "fulfilled" | "rejected";
+  loading: "idle" | "pending" | "fulfilled" | "rejected";
 }
 
 export const fetchWeatherData = createAsyncThunk<IWeatherData[], ICoordinates>(
@@ -13,7 +12,7 @@ export const fetchWeatherData = createAsyncThunk<IWeatherData[], ICoordinates>(
   async (params: ICoordinates): Promise<IWeatherData[]> => {
     try {
       const { data } = await axios.get<IDataDays>(
-        `${BASE_URL}${params.lat},${params.lng}?key=D52NUFUDL7963TWL6VX3X2BQJ`
+        `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${params.lat},${params.lng}?key=D52NUFUDL7963TWL6VX3X2BQJ`
       );
 
       return data.days;
@@ -26,7 +25,7 @@ export const fetchWeatherData = createAsyncThunk<IWeatherData[], ICoordinates>(
 
 const initialState: CounterState = {
   days: [],
-  loading: "pending",
+  loading: "idle",
 };
 
 export const weatherSlice = createSlice({

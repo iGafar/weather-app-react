@@ -2,16 +2,23 @@ import { FC } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { RootState } from "../store/store";
+import { getDateStandart } from "../functions";
 
 const Time: FC = () => {
   const mode = useSelector((state: RootState) => state.data.mode);
   const city = useSelector((state: RootState) => state.data.city);
+  const dayOfWeek = useSelector(
+    (state: RootState) => state.data.time?.dayOfWeek
+  );
+  const date = useSelector((state: RootState) => state.data.time?.dateTime);
 
   return (
     <TimeStyle $mode={mode}>
       <h1>{city}</h1>
-      <p className="time">9:00</p>
-      <p className="date">Thursday, 31 Aug</p>
+      <p className="time">{date?.slice(11, 16)}</p>
+      <p className="date">
+        {dayOfWeek}, {getDateStandart(date?.slice(0, 10) || "2024-01-01")}
+      </p>
     </TimeStyle>
   );
 };

@@ -22,7 +22,6 @@ const Hour: FC<IProps> = ({ data }) => {
           +hourRef.current.innerText.slice(0, 2) < 6
       );
     }
-    console.log(isEvening);
   }, [isEvening]);
 
   return (
